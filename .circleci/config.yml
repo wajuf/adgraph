@@ -7,18 +7,15 @@ jobs:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
       - run:
-          name: try
+          name: update system and install requirements
           command: |
-            whoami
-            a=hello_variable
-            touch a
-            pwd
-            mkdir b
-            cd b
+            apt update
+            apt upgrade
+            apt install build-essential libgnome-keyring-dev python-setuptools npm
       - run:
-          name: try
+          name: clone brave
           command: |
-            echo $a
-            pwd
-            ls -la
+            git clone git@github.com:brave/brave-browser.git
+            cd brave-browser
+            npm install
 
