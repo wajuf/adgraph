@@ -9,9 +9,10 @@ jobs:
       - run:
           name: update system and install requirements
           command: |
-            apt update
-            apt upgrade
-            apt install build-essential libgnome-keyring-dev python-setuptools npm
+            set -x -e
+            sudo apt update
+            sudo apt upgrade
+            sudo apt install build-essential libgnome-keyring-dev python-setuptools npm
       - run:
           name: clone brave
           command: |
