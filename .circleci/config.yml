@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: busybox
+    steps:
+      - checkout # check out the code in the project directory
+      - run: echo "hello world" # run the `echo` command
+
+
+
