@@ -16,9 +16,54 @@ jobs:
             node -v
             npm -v
       - run:
-          name: clone brave
+          name: install brave
           command: |
+            set -x -e
             git clone git@github.com:brave/brave-browser.git
             cd brave-browser
+            
             npm install
-
+            
+            # this takes 30-45 minutes to run
+            # the Chromium source is downloaded which has a large history
+            npm run init
+            
+            # additional build requirements
+            ./src/build/install-build-deps.sh
+      - run:
+          name: setting to specific versions
+          command: |
+            set -x -e
+            cd brave-browser
+            
+            # brave-browser: brave-browser repo
+            git reset --hard a58ca03
+            
+            cd src # brave-browser/src: chromium repo
+            git stash save
+            git checkout c69466738e3c046f0b77f51d1c57730dac331398
+            git stash pop
+            
+            cd brave # brave-browser/src/brave: brave-core repo
+            git reset --hard origin/import-remote-script-nodes
+            
+            cd ../v8 # brave-browser/src/v8: v8 repo
+            git checkout 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+      - run:
+          name: applying patches
+          command: |
+            set -x -e
+            cd brave-browser
+            
+            cd src/v8
+            git apply --ignore-whitespace ../../../page-graph-v8.diff
+            
+            cd .. # brave-browser/src: chromium repo
+            find brave/patches -name "*.patch" | while read LINE; do patch -p1 < $LINE; done
+      - run:
+          name: building brave
+          command: |
+            set -x -e
+            cd brave-browser
+            
+            npm run build -- Release --debug_build=true --official_build=false
