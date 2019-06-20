@@ -10,11 +10,15 @@ jobs:
           name: try
           command: |
             whoami
-            a=3
+            a=hello_variable
             touch a
+            pwd
+            mkdir b
+            cd b
       - run:
           name: try
           command: |
             echo $a
+            pwd
             ls -la
 
