@@ -26,7 +26,7 @@ jobs:
             
             # this takes 30-45 minutes to run
             # the Chromium source is downloaded which has a large history
-            npm run init
+            #npm run init
       - run:
           name: install additional build requirements
           command: |
@@ -34,7 +34,10 @@ jobs:
             cd brave-browser
             
             sudo apt install lsb-release
+            sudo apt-get install -f
             ./src/build/install-build-deps.sh
+            
+            npm run init
       - run:
           name: setting to specific versions
           command: |
