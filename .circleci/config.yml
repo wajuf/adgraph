@@ -61,7 +61,8 @@ jobs:
             cd brave # brave-browser/src/brave: brave-core repo
             git rev-parse HEAD
             git status
-            git reset --hard origin/import-remote-script-nodes
+            #git reset --hard origin/import-remote-script-nodes
+            git reset --hard origin/page-graph-integration
             git rev-parse HEAD
             git status
             
