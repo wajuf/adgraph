@@ -13,7 +13,6 @@ jobs:
             sudo apt update
             sudo apt upgrade
             sudo apt install build-essential libgnome-keyring-dev python-setuptools #npm
-            #sudo apt install g++-arm-linux-gnueabihf
             node -v
             npm -v
       - run:
@@ -34,9 +33,7 @@ jobs:
             set -x -e
             cd brave-browser
             
-            sudo apt install lsb-release g++-arm-linux-gnueabihf
-            #sudo apt autoremove
-            #sudo apt install -f
+            sudo apt install lsb-release g++-arm-linux-gnueabihf # need for the following script
             ./src/build/install-build-deps.sh
       - run:
           name: setting to specific versions
@@ -44,26 +41,36 @@ jobs:
             set -x -e
             cd brave-browser
             
+            git rev-parse HEAD
             git status
             # brave-browser: brave-browser repo
             git reset --hard a58ca03
+            git rev-parse HEAD
             git status
             
             cd src # brave-browser/src: chromium repo
+            git rev-parse HEAD
             git status
             #git stash save
-            git checkout c69466738e3c046f0b77f51d1c57730dac331398
+            #git checkout c69466738e3c046f0b77f51d1c57730dac331398
+            git reset --hard c69466738e3c046f0b77f51d1c57730dac331398
             #git stash pop
+            git rev-parse HEAD
             git status
             
             cd brave # brave-browser/src/brave: brave-core repo
+            git rev-parse HEAD
             git status
             git reset --hard origin/import-remote-script-nodes
+            git rev-parse HEAD
             git status
             
             cd ../v8 # brave-browser/src/v8: v8 repo
+            git rev-parse HEAD
             git status
-            git checkout 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+            #git checkout 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+            git reset --hard 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+            git rev-parse HEAD
             git status
       - run:
           name: applying patches
@@ -72,13 +79,17 @@ jobs:
             cd brave-browser
             
             cd src/v8
+            git rev-parse HEAD
             git status
             git apply --ignore-whitespace ../../../page-graph-v8.diff
+            git rev-parse HEAD
             git status
             
             cd .. # brave-browser/src: chromium repo
+            git rev-parse HEAD
             git status
             find brave/patches -name "*.patch" | while read LINE; do patch -p1 < $LINE; done
+            git rev-parse HEAD
             git status
       - run:
           name: building brave
