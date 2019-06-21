@@ -62,15 +62,16 @@ jobs:
             git rev-parse HEAD
             git status
             #git reset --hard origin/import-remote-script-nodes
-            git reset --hard origin/page-graph-integration
+            git reset --hard 8d798266d2e40fe0b4db5a6a95688eccc8d65c5a
+            #git reset --hard origin/page-graph-integration
             git rev-parse HEAD
             git status
             
             cd ../v8 # brave-browser/src/v8: v8 repo
             git rev-parse HEAD
             git status
-            #git checkout 392114613e6fe39b64c7bc7b89bef4b4b123dd67
-            git reset --hard 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+            git checkout 392114613e6fe39b64c7bc7b89bef4b4b123dd67
+            #git reset --hard 392114613e6fe39b64c7bc7b89bef4b4b123dd67
             git rev-parse HEAD
             git status
       - run:
@@ -89,6 +90,10 @@ jobs:
             cd .. # brave-browser/src: chromium repo
             git rev-parse HEAD
             git status
+            # patching the patch...
+            sed -i '\$-#include "third_party/blink/renderer/core/dom/document.h"$s$-$ $' brave/patches/third_party-blink-renderer-core-dom-comment.cc.patch
+            sed -i 's/@@ -21,15 +21,30 @@/@@ -21,15 +21,31 @@/' brave/patches/third_party-blink-renderer-core-dom-comment.cc.patch
+            # applying the patches
             find brave/patches -name "*.patch" | while read LINE; do patch -p1 < $LINE; done
             git rev-parse HEAD
             git status
